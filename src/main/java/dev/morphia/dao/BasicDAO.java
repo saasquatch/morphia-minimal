@@ -2,21 +2,14 @@ package dev.morphia.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.mongodb.WriteConcern;
-import com.mongodb.reactivestreams.client.MongoClient;
-
 import dev.morphia.Datastore;
-import dev.morphia.InsertOptions;
 import dev.morphia.Key;
 import dev.morphia.Morphia;
-import dev.morphia.UpdateOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.UpdateResults;
 
 /**
  * @param <T> the type of the entity
@@ -26,7 +19,6 @@ import dev.morphia.query.UpdateResults;
  * @deprecated This interface poorly tracks Datastore's API.  Use Datastore directly or wrap in an application specific DAO
  */
 @Deprecated
-@SuppressWarnings({"WeakerAccess", "deprecation", "unused"})
 public class BasicDAO<T, K> implements DAO<T, K> {
     //CHECKSTYLE:OFF
     /**
@@ -49,8 +41,8 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @param morphia     a Morphia instance
      * @param dbName      the name of the database
      */
-    public BasicDAO(final Class<T> entityClass, final MongoClient mongoClient, final Morphia morphia, final String dbName) {
-        initDS(mongoClient, morphia, dbName);
+    public BasicDAO(final Class<T> entityClass, final Morphia morphia, final String dbName) {
+        initDS(morphia, dbName);
         initType(entityClass);
     }
 
@@ -75,8 +67,8 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * @param dbName      the name of the database
      */
     @SuppressWarnings("unchecked")
-    protected BasicDAO(final MongoClient mongoClient, final Morphia morphia, final String dbName) {
-        initDS(mongoClient, morphia, dbName);
+    protected BasicDAO(final Morphia morphia, final String dbName) {
+        initDS(morphia, dbName);
         initType(((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
     }
 
@@ -127,8 +119,8 @@ public class BasicDAO<T, K> implements DAO<T, K> {
         return entityClazz;
     }
 
-    protected void initDS(final MongoClient mongoClient, final Morphia mor, final String db) {
-        ds = (dev.morphia.DatastoreImpl) mor.createDatastore(mongoClient, db);
+    protected void initDS(final Morphia mor, final String db) {
+        ds = (dev.morphia.DatastoreImpl) mor.createDatastore(db);
     }
 
     protected void initType(final Class<T> type) {

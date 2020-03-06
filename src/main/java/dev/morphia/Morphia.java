@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mongodb.DBObject;
-import com.mongodb.reactivestreams.client.MongoClient;
 
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -87,7 +86,7 @@ public class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     @SuppressWarnings("deprecation")
-    public Datastore createDatastore(final MongoClient mongoClient, final String dbName) {
+    public Datastore createDatastore(final String dbName) {
         return new DatastoreImpl(this);
     }
 
@@ -100,7 +99,7 @@ public class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     @SuppressWarnings("deprecation")
-    public Datastore createDatastore(final MongoClient mongoClient, final Mapper mapper, final String dbName) {
+    public Datastore createDatastore(final Mapper mapper, final String dbName) {
         return new DatastoreImpl(this, mapper);
     }
 

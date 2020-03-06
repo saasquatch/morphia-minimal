@@ -1,10 +1,6 @@
 package dev.morphia;
 
-
-import com.mongodb.reactivestreams.client.MongoClient;
-
 import dev.morphia.dao.BasicDAO;
-
 
 /**
  * Provides a basic DAO for use in applications
@@ -21,8 +17,8 @@ public class DAO<T, K> extends BasicDAO<T, K> {
      * @param morphia     the morphia instance to use
      * @param dbName      the database to connect to
      */
-    public DAO(final Class<T> entityClass, final MongoClient mongoClient, final Morphia morphia, final String dbName) {
-        super(entityClass, mongoClient, morphia, dbName);
+    public DAO(final Class<T> entityClass, final Morphia morphia, final String dbName) {
+        super(entityClass, morphia, dbName);
     }
 
     /**

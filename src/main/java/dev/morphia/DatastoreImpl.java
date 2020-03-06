@@ -1,7 +1,6 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.reactivestreams.client.MongoClient;
 
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.MappedClass;
@@ -46,7 +45,7 @@ public class DatastoreImpl implements Datastore {
      *
      * @param database the new database to use for operations
      * @return the new Datastore instance
-     * @deprecated use {@link Morphia#createDatastore(MongoClient, Mapper, String)}
+     * @deprecated use {@link Morphia#createDatastore(Mapper, String)}
      */
     @Deprecated
     public DatastoreImpl copy() {
