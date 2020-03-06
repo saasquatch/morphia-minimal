@@ -1,9 +1,6 @@
 package dev.morphia;
 
 
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoDatabase;
-
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -34,22 +31,6 @@ public interface Datastore {
      * @return the new UpdateOperations instance
      */
     <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz);
-
-    /**
-     * @return the MongoDatabase used by this DataStore
-     * @since 1.5
-     * @morphia.internal
-     */
-    MongoDatabase getDatabase();
-
-    /**
-     * Get the underlying MongoClient that allows connection to the MongoDB instance being used.
-     *
-     * @return the MongoClient being used by this datastore.
-     * @deprecated no replacement is planned
-     */
-    @Deprecated
-    MongoClient getMongo();
 
     /**
      * @return the current {@link QueryFactory}.

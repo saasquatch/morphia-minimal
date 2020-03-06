@@ -1,16 +1,16 @@
 package dev.morphia.mapping;
 
 
+import java.util.Map;
+
 import com.mongodb.DBObject;
+
 import dev.morphia.Datastore;
 import dev.morphia.mapping.cache.EntityCache;
-
-import java.util.Map;
 
 
 /**
  * @morphia.internal
- * @deprecated
  */
 public interface CustomMapper {
     /**

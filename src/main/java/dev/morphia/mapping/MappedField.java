@@ -17,25 +17,8 @@
 package dev.morphia.mapping;
 
 
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import dev.morphia.Key;
-import dev.morphia.annotations.AlsoLoad;
-import dev.morphia.annotations.ConstructorArgs;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.NotSaved;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Serialized;
-import dev.morphia.annotations.Text;
-import dev.morphia.annotations.Transient;
-import dev.morphia.annotations.Version;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.utils.ReflectionUtils;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -56,19 +39,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
+import dev.morphia.Key;
+import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.ConstructorArgs;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.NotSaved;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Serialized;
+import dev.morphia.annotations.Text;
+import dev.morphia.annotations.Transient;
+import dev.morphia.annotations.Version;
+import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.utils.ReflectionUtils;
 
 
 /**
  * @morphia.internal
- * @deprecated
  */
 @SuppressWarnings("unchecked")
 public class MappedField {
     private static final Logger LOG = LoggerFactory.getLogger(MappedField.class);
     // The Annotations to look for when reflecting on the field (stored in the mappingAnnotations)
-    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<Class<? extends Annotation>>();
+    private static final List<Class<? extends Annotation>> INTERESTING = new ArrayList<>();
 
     static {
         INTERESTING.add(Serialized.class);
@@ -85,8 +86,8 @@ public class MappedField {
     }
 
     // Annotations that have been found relevant to mapping
-    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<Class<? extends Annotation>, Annotation>();
-    private final List<MappedField> typeParameters = new ArrayList<MappedField>();
+    private final Map<Class<? extends Annotation>, Annotation> foundAnnotations = new HashMap<>();
+    private final List<MappedField> typeParameters = new ArrayList<>();
     private Class persistedClass;
     private Field field; // the field :)
     private Class realType; // the real type
@@ -295,7 +296,7 @@ public class MappedField {
     protected List<String> inferLoadNames() {
         final AlsoLoad al = (AlsoLoad) foundAnnotations.get(AlsoLoad.class);
         if (al != null && al.value() != null && al.value().length > 0) {
-            final List<String> names = new ArrayList<String>();
+            final List<String> names = new ArrayList<>();
             names.add(getMappedFieldName());
             names.addAll(asList(al.value()));
             return names;
