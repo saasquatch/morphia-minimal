@@ -1,30 +1,25 @@
 package dev.morphia.query;
 
-
-import static com.mongodb.CursorType.Tailable;
-import static com.mongodb.CursorType.TailableAwait;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.bson.Document;
 import org.bson.types.CodeWScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+
 import dev.morphia.Datastore;
-import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.MappedClass;
 import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.EntityCache;
-
 
 /**
  * Implementation of Query
@@ -33,10 +28,9 @@ import dev.morphia.mapping.cache.EntityCache;
  */
 @SuppressWarnings("deprecation")
 public class QueryImpl<T> implements CriteriaContainer, Query<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
+//    private static final Logger LOG = LoggerFactory.getLogger(QueryImpl.class);
     private final dev.morphia.DatastoreImpl ds;
     private final Class<T> clazz;
-    private EntityCache cache;
     private boolean validateName = true;
     private boolean validateType = true;
     private Boolean includeFields;
@@ -61,7 +55,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     public QueryImpl(final Class<T> clazz, final Datastore ds) {
         this.clazz = clazz;
         this.ds = ((dev.morphia.DatastoreImpl) ds);
-        cache = this.ds.getMapper().createEntityCache();
 
         final MappedClass mc = this.ds.getMapper().getMappedClass(clazz);
         final Entity entAn = mc == null ? null : mc.getEntityAnnotation();
@@ -104,114 +97,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public List<Key<T>> asKeyList() {
-        return asKeyList(getOptions());
-    }
-
-    @Override
-    public List<Key<T>> asKeyList(final FindOptions options) {
-    	return null;
-    }
-
-    @Override
-    public List<T> asList() {
-    	return null;
-    }
-
-    @Override
-    public List<T> asList(final FindOptions options) {
-    	return null;
-    }
-
-    @Override
-    @Deprecated
-    public long countAll() {
-    	return 0;
-    }
-
-    @Override
-    public long count() {
-    	return 0;
-    }
-
-    @Override
-    public long count(final CountOptions options) {
-    	return 0;
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetch() {
-        return fetch(getOptions());
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetch(final FindOptions options) {
-    	return null;
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities() {
-        return fetchEmptyEntities(getOptions());
-    }
-
-    @Override
-    public MorphiaIterator<T, T> fetchEmptyEntities(final FindOptions options) {
-        QueryImpl<T> cloned = cloneQuery();
-        cloned.getOptions().projection(new BasicDBObject("_id", 1));
-        cloned.includeFields = true;
-        return cloned.fetch(options);
-    }
-
-    @Override
-    public MorphiaKeyIterator<T> fetchKeys() {
-        return fetchKeys(getOptions());
-    }
-
-    @Override
-    public MorphiaKeyIterator<T> fetchKeys(final FindOptions options) {
-    	return null;
-    }
-
-    @Override
-    public T first(final FindOptions options) {
-        return null;
-    }
-
-    @Override
-    public T get() {
-        return first(getOptions());
-    }
-
-    @Override
-    public T get(final FindOptions options) {
-        return first(options);
-    }
-
-    @Override
-    public Key<T> getKey() {
-        return getKey(getOptions());
-    }
-
-    @Override
-    public Key<T> getKey(final FindOptions options) {
-        return null;
-    }
-
-    @Override
-    @Deprecated
-    public MorphiaIterator<T, T> tail() {
-        return tail(true);
-    }
-
-    @Override
-    @Deprecated
-    public MorphiaIterator<T, T> tail(final boolean awaitData) {
-        return fetch(getOptions()
-                         .copy()
-                         .cursorType(awaitData ? TailableAwait : Tailable));
-    }
-
-    @Override
     @Deprecated
     public Query<T> batchSize(final int value) {
         getOptions().batchSize(value);
@@ -221,7 +106,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public QueryImpl<T> cloneQuery() {
         final QueryImpl<T> n = new QueryImpl<>(clazz, ds);
-        n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
         n.validateName = validateName;
         n.validateType = validateType;
@@ -291,17 +175,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         validateName = true;
         validateType = true;
         return this;
-    }
-
-    @Override
-    public Map<String, Object> explain() {
-        return explain(getOptions());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> explain(final FindOptions options) {
-    	return null;
     }
 
     @Override
