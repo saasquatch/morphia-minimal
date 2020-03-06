@@ -4,19 +4,16 @@ package dev.morphia.query;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.bson.types.CodeWScope;
-
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-
 import dev.morphia.Key;
 
 
 /**
  * @param <T> The java type to query against
  */
-public interface Query<T> extends QueryResults<T> {
+public interface Query<T> {
     /**
      * Creates a container to hold 'and' clauses
      *

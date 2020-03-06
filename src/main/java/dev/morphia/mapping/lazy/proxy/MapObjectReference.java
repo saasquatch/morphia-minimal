@@ -1,12 +1,12 @@
 package dev.morphia.mapping.lazy.proxy;
 
 
-import dev.morphia.Datastore;
-import dev.morphia.Key;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import dev.morphia.Datastore;
+import dev.morphia.Key;
 
 
 /**
@@ -29,7 +29,7 @@ public class MapObjectReference extends AbstractReference implements ProxiedEnti
 
         super(datastore, referenceObjClass, ignoreMissing);
         object = mapToProxy;
-        keyMap = new LinkedHashMap<Object, Key<?>>();
+        keyMap = new LinkedHashMap<>();
     }
 
     //CHECKSTYLE:OFF
@@ -71,13 +71,6 @@ public class MapObjectReference extends AbstractReference implements ProxiedEnti
 
     @SuppressWarnings("unchecked")
     private void syncKeys() {
-        final Datastore ds = getDatastore();
-
-        keyMap.clear();
-        final Map<Object, Object> map = (Map) object;
-        for (final Map.Entry<Object, Object> e : map.entrySet()) {
-            keyMap.put(e.getKey(), ds.getKey(e.getValue()));
-        }
     }
 
 }

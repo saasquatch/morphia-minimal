@@ -5,22 +5,17 @@ import static com.mongodb.CursorType.Tailable;
 import static com.mongodb.CursorType.TailableAwait;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.bson.Document;
 import org.bson.types.CodeWScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
-
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
@@ -225,7 +220,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public QueryImpl<T> cloneQuery() {
-        final QueryImpl<T> n = new QueryImpl<T>(clazz, ds);
+        final QueryImpl<T> n = new QueryImpl<>(clazz, ds);
         n.cache = ds.getMapper().createEntityCache(); // fresh cache
         n.includeFields = includeFields;
         n.validateName = validateName;
@@ -311,7 +306,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(final String name) {
-        return new FieldEndImpl<QueryImpl<T>>(this, name, this);
+        return new FieldEndImpl<>(this, name, this);
     }
 
     @Override
@@ -493,7 +488,7 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     @Override
     public Query<T> retrieveKnownFields() {
         final MappedClass mc = ds.getMapper().getMappedClass(clazz);
-        final List<String> fields = new ArrayList<String>(mc.getPersistenceFields().size() + 1);
+        final List<String> fields = new ArrayList<>(mc.getPersistenceFields().size() + 1);
         for (final MappedField mf : mc.getPersistenceFields()) {
             fields.add(mf.getNameToStore());
         }
@@ -777,9 +772,4 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
         compoundContainer.attach(container);
     }
 
-	@Override
-	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

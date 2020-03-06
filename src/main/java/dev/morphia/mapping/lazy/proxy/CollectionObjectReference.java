@@ -1,14 +1,12 @@
 package dev.morphia.mapping.lazy.proxy;
 
-import dev.morphia.Datastore;
-import dev.morphia.Key;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.String.format;
+import dev.morphia.Datastore;
+import dev.morphia.Key;
 
 /**
  * A list of proxied elements
@@ -34,7 +32,7 @@ public class CollectionObjectReference<T> extends AbstractReference implements P
         super(datastore, referenceObjClass, ignoreMissing);
 
         object = type;
-        listOfKeys = new ArrayList<Key<?>>();
+        listOfKeys = new ArrayList<>();
     }
 
     @Override
@@ -68,41 +66,10 @@ public class CollectionObjectReference<T> extends AbstractReference implements P
     //CHECKSTYLE:ON
 
     @Override
-    @SuppressWarnings("unchecked")
     protected synchronized Object fetch() {
-        final Collection<T> c = (Collection<T>) object;
-        c.clear();
-
-        final int numberOfEntitiesExpected = listOfKeys.size();
-        // does not retain order:
-        // List<T> retrievedEntities = p.get().getByKeys(referenceObjClass,
-        // (List) __getKeysAsList());
-
-        // so we do it the lousy way: FIXME
-        final List<T> retrievedEntities = new ArrayList<T>(listOfKeys.size());
-        for (final Key<?> k : listOfKeys) {
-            T entity = (T) getDatastore().getByKey(referenceObjClass, k);
-            if (entity != null) {
-                retrievedEntities.add(entity);
-            }
-        }
-
-        if (!ignoreMissing && (numberOfEntitiesExpected != retrievedEntities.size())) {
-            throw new LazyReferenceFetchingException(format("During the lifetime of a proxy of type '%s', some referenced Entities"
-                                                                + " of type '%s' have disappeared from the Datastore.",
-                                                            c.getClass().getSimpleName(), referenceObjClass.getSimpleName()));
-        }
-
-        c.addAll(retrievedEntities);
-        return c;
+        return null;
     }
 
     private void syncKeys() {
-        final Datastore ds = getDatastore();
-
-        listOfKeys.clear();
-        for (final Object e : ((Collection) object)) {
-            listOfKeys.add(ds.getKey(e));
-        }
     }
 }

@@ -2,7 +2,6 @@ package dev.morphia;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.reactivestreams.client.MongoCollection;
 
@@ -137,20 +136,6 @@ public interface AdvancedDatastore extends Datastore {
      */
     @Deprecated
     <T> void ensureIndexes(String collection, Class<T> clazz, boolean background);
-
-    /**
-     * Checks that an entity exists for the given key or entity
-     *
-     * @param keyOrEntity    the value to check for
-     * @param readPreference Uses the supplied ReadPreference for the check.  If readPreference is null the preference is taken from the
-     *                       annotation or uses the default preference.
-     * @return the key if the entity exists
-     * @morphia.inline
-     * @see #exists(Object)
-     * @deprecated use {@link Query#first()} instead
-     */
-    @Deprecated
-    Key<?> exists(Object keyOrEntity, ReadPreference readPreference);
 
     /**
      * Find all instances by type in a different collection than what is mapped on the class given.

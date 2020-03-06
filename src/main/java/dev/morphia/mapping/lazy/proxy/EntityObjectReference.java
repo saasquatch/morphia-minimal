@@ -4,8 +4,6 @@ package dev.morphia.mapping.lazy.proxy;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 
-import static java.lang.String.format;
-
 
 /**
  * A serializable object reference
@@ -42,11 +40,6 @@ public class EntityObjectReference extends AbstractReference implements ProxiedE
     @Override
     @SuppressWarnings("unchecked")
     protected Object fetch() {
-        final Object entity = getDatastore().getByKey(referenceObjClass, key);
-        if (entity == null && !ignoreMissing) {
-            throw new LazyReferenceFetchingException(format("During the lifetime of the proxy, the Entity identified by '%s' "
-                                                                + "disappeared from the Datastore.", key));
-        }
-        return entity;
+        return null;
     }
 }

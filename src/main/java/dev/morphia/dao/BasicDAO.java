@@ -13,8 +13,8 @@ import dev.morphia.InsertOptions;
 import dev.morphia.Key;
 import dev.morphia.Morphia;
 import dev.morphia.UpdateOptions;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.query.QueryImpl;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateResults;
 
@@ -87,105 +87,13 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     }
 
     @Override
-    public long count() {
-        return ds.getCount(entityClazz);
-    }
-
-    @Override
-    public long count(final String key, final Object value) {
-        return count(ds.find(entityClazz).filter(key, value));
-    }
-
-    @Override
-    public long count(final Query<T> query) {
-    	return 0;
-    }
-
-    @Override
     public Query<T> createQuery() {
-        return ds.find(entityClazz);
+    	return new QueryImpl<>(getEntityClass(), getDatastore());
     }
 
     @Override
     public UpdateOperations<T> createUpdateOperations() {
         return ds.createUpdateOperations(entityClazz);
-    }
-
-    @Override
-    public void ensureIndexes() {
-        ds.ensureIndexes(entityClazz);
-    }
-
-    @Override
-    public boolean exists(final String key, final Object value) {
-        return exists(ds.find(entityClazz).filter(key, value));
-    }
-
-    @Override
-    public boolean exists(final Query<T> query) {
-        return query.get(new FindOptions().limit(1)) != null;
-    }
-
-    @Override
-    public Query<T> find() {
-        return createQuery();
-    }
-
-    @Override
-    public Query<T> find(final Query<T> query) {
-        return query;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<K> findIds() {
-        return (List<K>) keysToIds(ds.find(entityClazz).asKeyList());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<K> findIds(final String key, final Object value) {
-        return (List<K>) keysToIds(ds.find(entityClazz).filter(key, value).asKeyList());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<K> findIds(final Query<T> query) {
-        return (List<K>) keysToIds(query.asKeyList());
-    }
-
-    @Override
-    public T findOne(final String key, final Object value) {
-    	return null;
-    }
-
-    /* (non-Javadoc)
-     * @see dev.morphia.DAO#findOne(dev.morphia.query.Query)
-     */
-    @Override
-    public T findOne(final Query<T> query) {
-    	return null;
-    }
-
-    @Override
-    public Key<T> findOneId() {
-        return findOneId(ds.find(entityClazz));
-    }
-
-    @Override
-    public Key<T> findOneId(final String key, final Object value) {
-        return findOneId(ds.find(entityClazz).filter(key, value));
-    }
-
-    @Override
-    public Key<T> findOneId(final Query<T> query) {
-        Iterator<Key<T>> keys = query.fetchKeys().iterator();
-        return keys.hasNext() ? keys.next() : null;
-    }
-
-    @Override
-    public T get(final K id) {
-        return ds.get(entityClazz, id);
     }
 
     /* (non-Javadoc)
@@ -199,26 +107,6 @@ public class BasicDAO<T, K> implements DAO<T, K> {
     @Override
     public Class<T> getEntityClass() {
         return entityClazz;
-    }
-
-    @Override
-    public Key<T> save(final T entity) {
-        return ds.save(entity);
-    }
-
-    @Override
-    public Key<T> save(final T entity, final WriteConcern wc) {
-        return ds.save(entity, new InsertOptions().writeConcern(wc));
-    }
-
-    @Override
-    public UpdateResults update(final Query<T> query, final UpdateOperations<T> ops) {
-        return ds.update(query, ops);
-    }
-
-    @Override
-    public UpdateResults updateFirst(final Query<T> query, final UpdateOperations<T> ops) {
-        return ds.update(query, ops, new UpdateOptions());
     }
 
     /**
@@ -252,7 +140,7 @@ public class BasicDAO<T, K> implements DAO<T, K> {
      * Converts from a List<Key> to their id values
      */
     protected List<?> keysToIds(final List<Key<T>> keys) {
-        final List<Object> ids = new ArrayList<Object>(keys.size() * 2);
+        final List<Object> ids = new ArrayList<>(keys.size() * 2);
         for (final Key<T> key : keys) {
             ids.add(key.getId());
         }
