@@ -208,95 +208,6 @@ public interface AdvancedDatastore extends Datastore {
     long getCount(String collection);
 
     /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * <i>The return type will change in 2.0</i>
-     *
-     * @param entity the entity to insert
-     * @param <T>    the type of the entity
-     * @return the new key of the inserted entity
-     */
-    <T> Key<T> insert(T entity);
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * @param entity the entity to insert
-     * @param wc     the WriteConcern to use when inserting
-     * @param <T>    the type of the entity
-     * @return the new key of the inserted entity
-     * @morphia.inline
-     * @see WriteConcern
-     * @deprecated use {@link #insert(Object, InsertOptions)}
-     */
-    @Deprecated
-    <T> Key<T> insert(T entity, WriteConcern wc);
-
-    /**
-     * Inserts an entity in to the mapped collection.
-     *
-     * <i>The return type will change in 2.0</i>
-     *
-     * @param entity  the entity to insert
-     * @param options the options to apply to the insert operation
-     * @param <T>     the type of the entity
-     * @return the new key of the inserted entity
-     * @morphia.inline
-     * @since 1.3
-     */
-    <T> Key<T> insert(T entity, InsertOptions options);
-
-    /**
-     * Inserts an entity in to the named collection.
-     *
-     * @param collection the collection to update
-     * @param entity     the entity to insert
-     * @param <T>        the type of the entity
-     * @return the new key of the inserted entity
-     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
-     */
-    @Deprecated
-    <T> Key<T> insert(String collection, T entity);
-
-    /**
-     * Inserts an entity in to the named collection.
-     *
-     * @param collection the collection to update
-     * @param entity     the entity to insert
-     * @param options    the options to apply to the insert operation
-     * @param <T>        the type of the entity
-     * @return the new key of the inserted entity
-     * @morphia.inline
-     * @since 1.3
-     * @deprecated this feature is being removed.  no replacement is planned.  see issue #1331
-     */
-    @Deprecated
-    <T> Key<T> insert(String collection, T entity, InsertOptions options);
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * @param entities the entities to insert
-     * @param <T>      the type of the entity
-     * @return the new keys of the inserted entities
-     * @morphia.inline
-     * @deprecated use {@link #insert(Iterable)} instead
-     */
-    @Deprecated
-    <T> Iterable<Key<T>> insert(T... entities);
-
-    /**
-     * Inserts entities in to the mapped collection.
-     *
-     * <i>The return type will change in 2.0</i>
-     *
-     * @param entities the entities to insert
-     * @param <T>      the type of the entities
-     * @return the new keys of the inserted entities
-     */
-    <T> Iterable<Key<T>> insert(Iterable<T> entities);
-
-    /**
      * Inserts entities in to the mapped collection.
      *
      * @param entities the entities to insert
@@ -361,16 +272,6 @@ public interface AdvancedDatastore extends Datastore {
      */
     @Deprecated
     <T> Iterable<Key<T>> insert(String collection, Iterable<T> entities, InsertOptions options);
-
-    /**
-     * Returns a new query based on the example object
-     *
-     * @param collection the collection to query
-     * @param example    the example entity to use when building the query
-     * @param <T>        the type of the entity
-     * @return the query
-     */
-    <T> Query<T> queryByExample(String collection, T example);
 
     /**
      * Saves an entity in to the named collection.
