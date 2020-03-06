@@ -85,7 +85,6 @@ public class Morphia {
      * @param dbName      the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
-    @SuppressWarnings("deprecation")
     public Datastore createDatastore(final String dbName) {
         return new DatastoreImpl(this);
     }
