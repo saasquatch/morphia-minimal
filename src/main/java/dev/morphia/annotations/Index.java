@@ -36,6 +36,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
+@Deprecated
 public @interface Index {
     /**
      * @return List of fields to include in the index.  At least one field must be defined unless defining a text index. Use of this

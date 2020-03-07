@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
+@Deprecated
 public @interface IndexOptions {
     /**
      * @return if true, create the index in the background

@@ -1,14 +1,14 @@
 package dev.morphia.annotations;
 
 
-import dev.morphia.utils.IndexDirection;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.utils.IndexDirection;
 
 
 /**
@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
+@Deprecated
 public @interface Indexed {
     /**
      * @return Options to apply to the index. Use of this field will ignore any of the deprecated options defined on {@link Index} directly.

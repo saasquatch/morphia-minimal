@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @author Scott Hernandez
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CappedAt {
     /**

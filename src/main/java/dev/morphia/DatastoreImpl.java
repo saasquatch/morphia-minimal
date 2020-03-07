@@ -97,42 +97,6 @@ public class DatastoreImpl implements Datastore {
         return mapper.getId(entity);
     }
 
-    <T> FindAndModifyOptions enforceWriteConcern(final FindAndModifyOptions options, final Class<T> klass) {
-        if (options.getWriteConcern() == null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
-    <T> InsertOptions enforceWriteConcern(final InsertOptions options, final Class<T> klass) {
-        if (options.getWriteConcern() == null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
-    <T> UpdateOptions enforceWriteConcern(final UpdateOptions options, final Class<T> klass) {
-        if (options.getWriteConcern() == null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
-    <T> DeleteOptions enforceWriteConcern(final DeleteOptions options, final Class<T> klass) {
-        if (options.getWriteConcern() == null) {
-            return options
-                       .copy()
-                       .writeConcern(getWriteConcern(klass));
-        }
-        return options;
-    }
-
     /**
      * Creates and returns a {@link Query} using the underlying {@link QueryFactory}.
      *
