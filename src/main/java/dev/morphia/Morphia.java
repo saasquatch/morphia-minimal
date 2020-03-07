@@ -80,7 +80,7 @@ public class Morphia {
      * @param dbName      the name of the database
      * @return a Datastore that you can use to interact with MongoDB
      */
-    public Datastore createDatastore(final String dbName) {
+    public Datastore createDatastore() {
         return new DatastoreImpl(this);
     }
 
@@ -93,7 +93,7 @@ public class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     @SuppressWarnings("deprecation")
-    public Datastore createDatastore(final Mapper mapper, final String dbName) {
+    public Datastore createDatastore(final Mapper mapper) {
         return new DatastoreImpl(this, mapper);
     }
 
