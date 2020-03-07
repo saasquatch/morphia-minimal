@@ -241,7 +241,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
     public DBObject getQueryObject() {
         final DBObject obj = new BasicDBObject();
 
@@ -264,7 +263,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    @Deprecated
     public DBObject getSortObject() {
         DBObject sort = getOptions().getSortDBObject();
         return (sort == null) ? null : new BasicDBObject(sort.toMap());
@@ -341,20 +339,6 @@ public class QueryImpl<T> implements CriteriaContainer, Query<T> {
             sortList.put(s, sort.getOrder());
         }
         getOptions().sort(sortList);
-        return this;
-    }
-
-    @Override
-    @Deprecated
-    public Query<T> queryNonPrimary() {
-        getOptions().readPreference(ReadPreference.secondaryPreferred());
-        return this;
-    }
-
-    @Override
-    @Deprecated
-    public Query<T> queryPrimaryOnly() {
-        getOptions().readPreference(ReadPreference.primary());
         return this;
     }
 

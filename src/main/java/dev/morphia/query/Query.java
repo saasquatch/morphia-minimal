@@ -198,18 +198,12 @@ public interface Query<T> {
 
     /**
      * @return the Mongo query {@link DBObject}.
-     * @deprecated
-     * @morphia.internal
      */
-    @Deprecated
-    DBObject getQueryObject();
+	DBObject getQueryObject();
 
     /**
      * @return the Mongo sort {@link DBObject}.
-     * @deprecated
-     * @morphia.internal
      */
-    @Deprecated
     DBObject getSortObject();
 
     /**
@@ -358,33 +352,6 @@ public interface Query<T> {
      * @mongodb.driver.manual reference/operator/projection/meta/ $meta
      */
     Query<T> project(Meta meta);
-
-    /**
-     * Route query to non-primary node
-     *
-     * @return this
-     * @see ReadPreference#secondary()
-     * @see ReadPreference#secondaryPreferred()
-     * @deprecated use the methods that accept Options directly
-     * @see FindOptions#readPreference(ReadPreference)
-     * @see ReadPreference#secondary()
-     * @see ReadPreference#secondaryPreferred()
-     */
-    @Deprecated
-    Query<T> queryNonPrimary();
-
-    /**
-     * Route query to primary node
-     *
-     * @return this
-     * @see ReadPreference#primary()
-     * @deprecated use the methods that accept Options directly.
-     * @see FindOptions#readPreference(ReadPreference)
-     * @see ReadPreference#primary()
-     * @see ReadPreference#primaryPreferred()
-     */
-    @Deprecated
-    Query<T> queryPrimaryOnly();
 
     /**
      * Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes
