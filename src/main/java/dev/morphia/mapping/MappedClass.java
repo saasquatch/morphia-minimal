@@ -74,7 +74,6 @@ public class MappedClass {
     /**
      * Annotations interesting for life-cycle events
      */
-    @SuppressWarnings("unchecked")
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
                                                                                           PreSave.class,
                                                                                           PreLoad.class,
@@ -240,7 +239,7 @@ public class MappedClass {
      * @param mapper  the Mapper to use
      * @return dbObj
      */
-    @SuppressWarnings({"WMI", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     public DBObject callLifecycleMethods(final Class<? extends Annotation> event, final Object entity, final DBObject dbObj,
                                          final Mapper mapper) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods((Class<Annotation>) event);
