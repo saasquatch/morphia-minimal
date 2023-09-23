@@ -108,13 +108,7 @@ public class MappedField {
     private List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
 
     MappedField(final Field f, final Class<?> clazz, final Mapper mapper) {
-        try {
-            f.setAccessible(true);
-        } catch (SecurityException e) {
-            throw e;
-        } catch (Exception e) {
-            LOG.error("Exception encountered with setAccessible (2) field[{}] class[{}]", field, clazz, e);
-        }
+        f.setAccessible(true);
         field = f;
         persistedClass = clazz;
         realType = field.getType();
