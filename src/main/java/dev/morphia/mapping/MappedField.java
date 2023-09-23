@@ -113,7 +113,7 @@ public class MappedField {
         } catch (SecurityException e) {
             throw e;
         } catch (Exception e) {
-            LOG.info("Exception encountered with setAccessible (2)", e);
+            LOG.error("Exception encountered with setAccessible (2) field[{}] class[{}]", field, clazz, e);
         }
         field = f;
         persistedClass = clazz;
