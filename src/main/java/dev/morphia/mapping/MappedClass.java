@@ -527,7 +527,7 @@ public class MappedClass {
     protected void discover(final Mapper mapper) {
         // Java 17 does not allow using reflections into java default classes
         if (clazz.getName().startsWith("java.")) {
-            LOG.error("Not discovering Java default class[{}]", clazz);
+            LOG.info("Not discovering Java default class[{}]", clazz);
             return;
         }
 
