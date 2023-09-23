@@ -563,7 +563,7 @@ public class MappedClass {
             } catch (SecurityException e) {
                 throw e;
             } catch (Exception e) {
-                LOG.info("Exception encountered with setAccessible", e);
+                LOG.info("Exception encountered with setAccessible (1)", e);
             }
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
