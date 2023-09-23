@@ -558,10 +558,10 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
-            field.setAccessible(true);
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
                 if (field.isAnnotationPresent(Id.class)) {
+                    field.setAccessible(true);
                     persistenceFields.add(new MappedField(field, clazz, mapper));
                     update();
                 } else if (field.isAnnotationPresent(Property.class)
@@ -570,9 +570,11 @@ public class MappedClass {
                            || field.isAnnotationPresent(Serialized.class)
                            || isSupportedType(field.getType())
                            || ReflectionUtils.implementsInterface(field.getType(), Serializable.class)) {
+                    field.setAccessible(true);
                     persistenceFields.add(new MappedField(field, clazz, mapper));
                 } else {
                     if (mapper.getOptions().getDefaultMapper() != null) {
+                        field.setAccessible(true);
                         persistenceFields.add(new MappedField(field, clazz, mapper));
                     } else if (LOG.isWarnEnabled()) {
                         LOG.warn(format("Ignoring (will not persist) field: %s.%s [type:%s]", clazz.getName(), field.getName(),
