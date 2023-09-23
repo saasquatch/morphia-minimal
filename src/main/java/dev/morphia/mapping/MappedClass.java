@@ -525,6 +525,12 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover(final Mapper mapper) {
+        // Java 17 does not allow using reflections into java default classes
+        if (clazz.getName().startsWith("java.")) {
+            LOG.error("Not discovering Java default class[{}]", clazz);
+            return;
+        }
+
         for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
             addAnnotation(c);
         }
@@ -558,13 +564,7 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
-            try {
-                field.setAccessible(true);
-            } catch (SecurityException e) {
-                throw e;
-            } catch (Exception e) {
-                LOG.error("Exception encountered with setAccessible (1) field[{}] class[{}]", field, clazz, e);
-            }
+            field.setAccessible(true);
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
                 if (field.isAnnotationPresent(Id.class)) {
