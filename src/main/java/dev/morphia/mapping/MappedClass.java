@@ -529,6 +529,10 @@ public class MappedClass {
         if (clazz.getName().startsWith("java.")) {
             LOG.info("Not discovering Java default class[{}]", clazz);
             return;
+        } else if (clazz.isEnum()) {
+            // This also applies to enums, because enums inherit methods from java.lang.Enum
+            LOG.info("Not discovering enum class[{}]", clazz);
+            return;
         }
 
         for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
