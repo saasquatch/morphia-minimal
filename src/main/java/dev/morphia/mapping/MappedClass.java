@@ -573,7 +573,8 @@ public class MappedClass {
             } catch (SecurityException e) {
                 throw e;
             } catch (Exception e) {
-                LOG.error("Error in setAccessible for field[{}] in [{}]", field, clazz, e);
+                LOG.error("Error in setAccessible for field[{}] in [{}] isEnum[{}] fieldDeclaringClass[{}]",
+                        field, clazz, clazz.isEnum(), field.getDeclaringClass(), e);
             }
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
