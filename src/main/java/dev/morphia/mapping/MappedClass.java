@@ -568,7 +568,13 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
-            field.setAccessible(true);
+            try {
+                field.setAccessible(true);
+            } catch (SecurityException e) {
+                throw e;
+            } catch (Exception e) {
+                LOG.error("Error in setAccessible for field[{}] in [{}]", field, clazz, e);
+            }
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
                 if (field.isAnnotationPresent(Id.class)) {
