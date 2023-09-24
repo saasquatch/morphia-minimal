@@ -568,6 +568,10 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
+            // Java 17 also does not allow using reflections into fields inherited from java default classes
+            if (field.getDeclaringClass().getName().startsWith("java.")) {
+                continue;
+            }
             try {
                 field.setAccessible(true);
             } catch (SecurityException e) {
