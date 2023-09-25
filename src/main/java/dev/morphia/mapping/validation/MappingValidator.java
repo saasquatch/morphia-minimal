@@ -19,7 +19,6 @@ import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
 import dev.morphia.mapping.validation.classrules.NoId;
 import dev.morphia.mapping.validation.fieldrules.ContradictingFieldAnnotation;
-import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
 import dev.morphia.mapping.validation.fieldrules.MapKeyDifferentFromString;
 import dev.morphia.mapping.validation.fieldrules.MapNotSerializable;
@@ -127,7 +126,6 @@ public class MappingValidator {
         // field-level
         constraints.add(new MisplacedProperty());
         constraints.add(new ReferenceToUnidentifiable());
-        constraints.add(new LazyReferenceMissingDependencies());
         constraints.add(new LazyReferenceOnArray());
         constraints.add(new MapKeyDifferentFromString());
         constraints.add(new MapNotSerializable());

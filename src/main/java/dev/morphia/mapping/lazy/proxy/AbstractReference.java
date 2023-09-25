@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import com.thoughtworks.proxy.kit.ObjectReference;
-
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 
@@ -15,7 +13,7 @@ import dev.morphia.Key;
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */
 @SuppressWarnings({"rawtypes"})
-public abstract class AbstractReference implements Serializable, ObjectReference, ProxiedReference {
+public abstract class AbstractReference implements Serializable, ProxiedReference {
 
     private static final long serialVersionUID = 1L;
     //CHECKSTYLE:OFF
@@ -49,12 +47,6 @@ public abstract class AbstractReference implements Serializable, ObjectReference
     //CHECKSTYLE:OFF
     @Override
     public Object __unwrap() {
-        //CHECKSTYLE:ON
-        return get();
-    }
-
-    @Override
-    public final synchronized Object get() {
         if (isFetched) {
             return object;
         }
@@ -62,11 +54,6 @@ public abstract class AbstractReference implements Serializable, ObjectReference
         object = fetch();
         isFetched = true;
         return object;
-    }
-
-    @Override
-    public final void set(final Object arg0) {
-        throw new UnsupportedOperationException();
     }
 
     protected void beforeWriteObject() {

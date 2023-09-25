@@ -27,7 +27,6 @@ import java.io.Serializable;
  * was created by a common Object factory, it could make use of the current context (like Guice Scopes etc.)
  *
  * @author uwe schaefer
- * @see LazyProxyFactory
  * @deprecated DatastoreProviders are no longer necessary
  */
 @Deprecated
