@@ -37,8 +37,8 @@
     </dependency>
     <dependency>
       <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-reactivestreams</artifactId>
-      <version>4.0.0</version>
+      <artifactId>mongodb-driver-core</artifactId>
+      <version>4.10.2</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
