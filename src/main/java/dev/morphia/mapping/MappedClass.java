@@ -521,12 +521,18 @@ public class MappedClass {
         }
     }
 
+    private static boolean isJavaInternal(Class<?> c) {
+        final String name = c.getName();
+        return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("jdk.")
+                || name.startsWith("com.sun.") || name.startsWith("sun.");
+    }
+
     /**
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover(final Mapper mapper) {
         // Java 17 does not allow using reflections into java default classes
-        if (clazz.getName().startsWith("java.")) {
+        if (isJavaInternal(clazz)) {
             LOG.info("Not discovering Java default class[{}]", clazz);
             return;
         } else if (clazz.isEnum()) {
@@ -569,7 +575,7 @@ public class MappedClass {
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
             // Java 17 also does not allow using reflections into fields inherited from java default classes
-            if (field.getDeclaringClass().getName().startsWith("java.")) {
+            if (isJavaInternal(field.getDeclaringClass())) {
                 LOG.info("Not discovering field[{}] inherited from Java default declaringClass[{}] class[{}]",
                         field, field.getDeclaringClass(), clazz);
                 continue;
