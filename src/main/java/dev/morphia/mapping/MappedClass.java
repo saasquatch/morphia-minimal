@@ -531,9 +531,9 @@ public class MappedClass {
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover(final Mapper mapper) {
-        // Java 17 does not allow using reflections into java default classes
+        // Java 17 does not allow using reflections into java internal classes
         if (isJavaInternal(clazz)) {
-            LOG.info("Not discovering Java default class[{}]", clazz);
+            LOG.info("Not discovering Java internal class[{}]", clazz);
             return;
         } else if (clazz.isEnum()) {
             // This also applies to enums, because enums inherit methods from java.lang.Enum
@@ -574,7 +574,7 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
-            // Java 17 also does not allow using reflections into fields inherited from java default classes
+            // Java 17 also does not allow using reflections into fields inherited from java internal classes
             if (isJavaInternal(field.getDeclaringClass())) {
                 LOG.info("Not discovering field[{}] inherited from Java default declaringClass[{}] class[{}]",
                         field, field.getDeclaringClass(), clazz);
