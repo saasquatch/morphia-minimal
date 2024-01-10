@@ -521,10 +521,26 @@ public class MappedClass {
         }
     }
 
+    private static boolean isJavaInternal(Class<?> c) {
+        final String name = c.getName();
+        return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("jdk.")
+                || name.startsWith("com.sun.") || name.startsWith("sun.");
+    }
+
     /**
      * Discovers interesting (that we care about) things about the class.
      */
     protected void discover(final Mapper mapper) {
+        // Java 17 does not allow using reflections into java internal classes
+        if (isJavaInternal(clazz)) {
+            LOG.info("Not discovering Java internal class[{}]", clazz);
+            return;
+        } else if (clazz.isEnum()) {
+            // This also applies to enums, because enums inherit methods from java.lang.Enum
+            LOG.info("Not discovering enum class[{}]", clazz);
+            return;
+        }
+
         for (final Class<? extends Annotation> c : INTERESTING_ANNOTATIONS) {
             addAnnotation(c);
         }
@@ -558,7 +574,20 @@ public class MappedClass {
         update();
 
         for (final java.lang.reflect.Field field : ReflectionUtils.getDeclaredAndInheritedFields(clazz, true)) {
-            field.setAccessible(true);
+            // Java 17 also does not allow using reflections into fields inherited from java internal classes
+            if (isJavaInternal(field.getDeclaringClass())) {
+                LOG.info("Not discovering field[{}] inherited from Java default declaringClass[{}] class[{}]",
+                        field, field.getDeclaringClass(), clazz);
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+            } catch (SecurityException e) {
+                throw e;
+            } catch (Exception e) {
+                LOG.error("Error in setAccessible for field[{}] in [{}] isEnum[{}] fieldDeclaringClass[{}]",
+                        field, clazz, clazz.isEnum(), field.getDeclaringClass(), e);
+            }
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
                 if (field.isAnnotationPresent(Id.class)) {

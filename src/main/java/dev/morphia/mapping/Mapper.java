@@ -59,8 +59,6 @@ import dev.morphia.converters.TypeConverter;
 import dev.morphia.mapping.cache.DefaultEntityCache;
 import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
-import dev.morphia.mapping.lazy.LazyProxyFactory;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
 import dev.morphia.query.Query;
@@ -108,8 +106,6 @@ public class Mapper {
 
     //A general cache of instances of classes; used by MappedClass for EntityListener(s)
     private final Map<Class, Object> instanceCache = new ConcurrentHashMap();
-    // TODO: make these configurable
-    private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
     private final dev.morphia.converters.Converters converters;
     private MapperOptions opts = MapperOptions.builder().build();
 
@@ -796,10 +792,6 @@ public class Mapper {
         if (mc.getMappedVersionField() != null && (dbObj != null)) {
             readMappedField(datastore, mc.getMappedVersionField(), entity, cache, dbObj);
         }
-    }
-
-    protected LazyProxyFactory getProxyFactory() {
-        return proxyFactory;
     }
 
     private void addConverters(final MappedClass mc) {

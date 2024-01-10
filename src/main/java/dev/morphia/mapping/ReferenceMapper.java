@@ -20,15 +20,10 @@ import dev.morphia.mapping.experimental.CollectionReference;
 import dev.morphia.mapping.experimental.MapReference;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.experimental.SingleReference;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReference;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReferenceList;
 import dev.morphia.mapping.lazy.proxy.ProxiedEntityReferenceMap;
 import dev.morphia.mapping.lazy.proxy.ProxyHelper;
-import dev.morphia.utils.IterHelper;
-import dev.morphia.utils.IterHelper.IterCallback;
-import dev.morphia.utils.IterHelper.MapIterCallback;
-import dev.morphia.utils.ReflectionUtils;
 
 /**
  * @morphia.internal
@@ -99,18 +94,6 @@ class ReferenceMapper implements CustomMapper {
                    : mapper.keyToDBRef(key));
     }
 
-    private Object createOrReuseProxy(final Datastore datastore, final Mapper mapper, final Class referenceObjClass, final Object ref,
-                                      final EntityCache cache, final Reference anntotation) {
-        final Key key = anntotation.idOnly() ? mapper.manualRefToKey(referenceObjClass, ref) : mapper.refToKey((DBRef) ref);
-        final Object proxyAlreadyCreated = cache.getProxy(key);
-        if (proxyAlreadyCreated != null) {
-            return proxyAlreadyCreated;
-        }
-        final Object newProxy = mapper.getProxyFactory().createProxy(datastore, referenceObjClass, key, anntotation.ignoreMissing());
-        cache.putProxy(key, newProxy);
-        return newProxy;
-    }
-
     private Key<?> getKey(final Object entity, final Mapper mapper) {
         try {
             if (entity instanceof ProxiedEntityReference) {
@@ -132,103 +115,14 @@ class ReferenceMapper implements CustomMapper {
                                 final Object entity,
                                 final Reference refAnn,
                                 final EntityCache cache) {
-        // multiple references in a List
-        final Class referenceObjClass = mf.getSubClass();
-        // load reference class.  this "fixes" #816
-        mapper.getMappedClass(referenceObjClass);
-        Collection references = mf.isSet() ? mapper.getOptions().getObjectFactory().createSet(mf)
-                                           : mapper.getOptions().getObjectFactory().createList(mf);
-
-        if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-            final Object dbVal = mf.getDbObjectValue(dbObject);
-            if (dbVal != null) {
-                references = mapper.getProxyFactory()
-                                   .createListProxy(datastore, references, referenceObjClass, refAnn.ignoreMissing());
-                final ProxiedEntityReferenceList referencesAsProxy = (ProxiedEntityReferenceList) references;
-
-                if (dbVal instanceof List) {
-                    referencesAsProxy.__addAll(refAnn.idOnly()
-                                               ? mapper.getKeysByManualRefs(referenceObjClass, (List) dbVal)
-                                               : mapper.getKeysByRefs((List) dbVal));
-                } else {
-                    referencesAsProxy.__add(refAnn.idOnly()
-                                            ? mapper.manualRefToKey(referenceObjClass, dbVal)
-                                            : mapper.refToKey((DBRef) dbVal));
-                }
-            }
-        } else {
-            final Object dbVal = mf.getDbObjectValue(dbObject);
-            final Collection refs = references;
-            new IterHelper<String, Object>().loopOrSingle(dbVal, new IterCallback<Object>() {
-                @Override
-                public void eval(final Object val) {
-                    final Object ent = resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), val);
-                    if (ent == null) {
-                        LOG.warn("Null reference found when retrieving value for " + mf.getFullName());
-                    } else {
-                        refs.add(ent);
-                    }
-                }
-            });
-        }
-
-        if (mf.getType().isArray()) {
-            mf.setFieldValue(entity, ReflectionUtils.convertToArray(mf.getSubClass(), ReflectionUtils.iterToList(references)));
-        } else {
-            mf.setFieldValue(entity, references);
-        }
     }
 
     private void readMap(final Datastore datastore, final Mapper mapper, final Object entity, final Reference refAnn,
                          final EntityCache cache, final MappedField mf, final DBObject dbObject) {
-        final Class referenceObjClass = mf.getSubClass();
-        Map m = mapper.getOptions().getObjectFactory().createMap(mf);
-
-        final DBObject dbVal = (DBObject) mf.getDbObjectValue(dbObject);
-        if (dbVal != null) {
-            if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                // replace map by proxy to it.
-                m = mapper.getProxyFactory().createMapProxy(datastore, m, referenceObjClass, refAnn.ignoreMissing());
-            }
-
-            final Map map = m;
-            new IterHelper<Object, Object>().loopMap(dbVal, new MapIterCallback<Object, Object>() {
-                @Override
-                public void eval(final Object k, final Object val) {
-
-                    final Object objKey = mapper.getConverters().decode(mf.getMapKeyClass(), k, mf);
-
-                    if (refAnn.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                        final ProxiedEntityReferenceMap proxiedMap = (ProxiedEntityReferenceMap) map;
-                        proxiedMap.__put(objKey, refAnn.idOnly()
-                                                 ? mapper.manualRefToKey(referenceObjClass, val)
-                                                 : mapper.refToKey((DBRef) val));
-                    } else {
-                        map.put(objKey, resolveObject(datastore, mapper, cache, mf, refAnn.idOnly(), val));
-                    }
-                }
-            });
-        }
-        mf.setFieldValue(entity, m);
     }
 
     private void readSingle(final Datastore datastore, final Mapper mapper, final Object entity, final Class fieldType,
                             final Reference annotation, final EntityCache cache, final MappedField mf, final DBObject dbObject) {
-
-        final Object ref = mf.getDbObjectValue(dbObject);
-        if (ref != null) {
-            Object resolvedObject;
-            if (annotation.lazy() && LazyFeatureDependencies.assertDependencyFullFilled()) {
-                resolvedObject = createOrReuseProxy(datastore, mapper, fieldType, ref, cache, annotation);
-            } else {
-                resolvedObject = resolveObject(datastore, mapper, cache, mf, annotation.idOnly(), ref);
-            }
-
-            if (resolvedObject != null) {
-                mf.setFieldValue(entity, resolvedObject);
-            }
-
-        }
     }
 
     private void writeCollection(final MappedField mf, final DBObject dbObject, final String name, final Object fieldValue,

@@ -1,14 +1,10 @@
 package dev.morphia.mapping.cache;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength;
 import org.apache.commons.collections4.map.ReferenceMap;
 import dev.morphia.Key;
-import dev.morphia.mapping.lazy.LazyFeatureDependencies;
-import dev.morphia.mapping.lazy.proxy.ProxyHelper;
-
 
 /**
  * This is the default EntityCache for Morphia
@@ -49,13 +45,6 @@ public class DefaultEntityCache implements EntityCache {
     public <T> T getEntity(final Key<T> k) {
         final Object o = entityMap.get(k);
         if (o == null) {
-            if (LazyFeatureDependencies.testDependencyFullFilled()) {
-                final Object proxy = proxyMap.get(k);
-                if (proxy != null) {
-                    stats.incHits();
-                    return (T) ProxyHelper.unwrap(proxy);
-                }
-            }
             // System.out.println("miss entity " + k + ":" + this);
             stats.incMisses();
         } else {
